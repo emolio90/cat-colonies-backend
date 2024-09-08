@@ -54,4 +54,30 @@ app.post('/cats', (req, res) => {
     newCat.id = cats.length + 1;
     cats.push(newCat);
     res.status(201).json(newCat);
-})
+});
+
+app.put('/cats/:id', (req, res) => {
+    const catId = parseInt(req.params.id);
+    const catIndex = cats.findIndex(c => c.id === catId);
+
+    if(catIndex !== -1) {
+        const updatedCat = { ...cats[catIndex], ...req.body };
+        cats[catIndex] = updatedCat;
+        res.json(updatedCat);
+    } else {
+        res.status(404).json({ message: "Cat not found"});
+    }
+});
+
+app.delete('/cats/:id', (req, res) => {
+    const catId = parseInt(req.params.id);
+    const catIndex = cats.findIndex(c => c.id === catId);
+
+    if (catIndex !== -1) {
+        const deletedCat = cats.splice(catIndex, 1);
+        res.json(deletedCat[0]);
+    } else {
+        res.status(404).json({ message: "Cat not found"});
+    }
+});
+
