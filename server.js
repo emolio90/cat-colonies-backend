@@ -7,7 +7,7 @@ app.use(express.json());
 
 // Basic route to test if server is working
 app.get('/', (req, res) => {
-    res.send('Hello, Cats!');
+    res.send('Hello, to all the catCats!');
 });
 
 // Start the server
