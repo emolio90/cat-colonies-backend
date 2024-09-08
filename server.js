@@ -14,3 +14,26 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
+
+let cats = [
+    {
+        id: 1,
+        name: "Gazpacho",
+        lat: -0.5151780821459511,
+        long: 38.39203503246884,
+        lastFed: "2024-09-01",
+        description: "Dormilón, gruñón, cagón"
+    },
+    {
+        id: 2,
+        name: "Salmorejo",
+        lat: -0.5144675744871279,
+        long: 38.39151012307428,
+        lastFed: "2024-08-01",
+        description: "Alérgico, tóxico, cínico"
+    }
+]
+
+app.get('/cats', (req, res) => {
+    res.json(cats);
+});
