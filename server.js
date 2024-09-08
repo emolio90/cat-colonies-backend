@@ -38,6 +38,17 @@ app.get('/cats', (req, res) => {
     res.json(cats);
 });
 
+app.get('/cats/:id', (req, res) => {
+    const catId = parseInt(req.params.id);
+    const cat = cats.find(c => c.id === catId);
+
+    if (cat) {
+        res.json(cat);
+    } else {
+        res.status(404).json({ message: "Cat not found"});
+    }
+});
+
 app.post('/cats', (req, res) => {
     const newCat = req.body;
     newCat.id = cats.length + 1;
