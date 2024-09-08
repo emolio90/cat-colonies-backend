@@ -1,83 +1,84 @@
 const express = require('express');
+const loki = require('lokijs');
+
+// Initialize the Express app
 const app = express();
 const port = 3000;
 
-// Middleware to parse incoming JSON requests
+// Middleware to parse JSON bodies
 app.use(express.json());
 
-// Basic route to test if server is working
-app.get('/', (req, res) => {
-    res.send('Hello, to all the catCats!');
+// Initialize LokiJS database and load the data from 'cats.db'
+const db = new loki('cats.db', {
+    autoload: true,
+    autoloadCallback: loadHandler,
+    autosave: true,
+    autosaveInterval: 4000  // Save every 4 seconds
+});
+
+let catsCollection;
+
+// Load the database or create the collection
+function loadHandler() {
+    catsCollection = db.getCollection('cats');
+    if (!catsCollection) {
+        catsCollection = db.addCollection('cats');
+    }
+}
+
+// GET /cats - Fetch all cats
+app.get('/cats', (req, res) => {
+    const allCats = catsCollection.find();
+    res.json(allCats);
+});
+
+// GET /cats/:id - Fetch a specific cat by ID
+app.get('/cats/:id', (req, res) => {
+    const catId = parseInt(req.params.id);
+    const cat = catsCollection.findOne({ $loki: catId });
+
+    if (cat) {
+        res.json(cat);
+    } else {
+        res.status(404).json({ message: 'Cat not found' });
+    }
+});
+
+// POST /cats - Add a new cat
+app.post('/cats', (req, res) => {
+    const newCat = req.body;
+    catsCollection.insert(newCat);
+    res.status(201).json(newCat);
+});
+
+// PUT /cats/:id - Update a cat's information
+app.put('/cats/:id', (req, res) => {
+    const catId = parseInt(req.params.id);
+    let cat = catsCollection.findOne({ $loki: catId });
+
+    if (cat) {
+        Object.assign(cat, req.body);  // Merge updated data
+        catsCollection.update(cat);    // Save the update
+        res.json(cat);
+    } else {
+        res.status(404).json({ message: 'Cat not found' });
+    }
+});
+
+// DELETE /cats/:id - Remove a cat
+app.delete('/cats/:id', (req, res) => {
+    const catId = parseInt(req.params.id);
+    const cat = catsCollection.findOne({ $loki: catId });
+
+    if (cat) {
+        catsCollection.remove(cat);
+        res.json(cat);
+    } else {
+        res.status(404).json({ message: 'Cat not found' });
+    }
 });
 
 // Start the server
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
-
-let cats = [
-    {
-        id: 1,
-        name: "Gazpacho",
-        lat: -0.5151780821459511,
-        long: 38.39203503246884,
-        lastFed: "2024-09-01",
-        description: "Dormilón, gruñón, cagón"
-    },
-    {
-        id: 2,
-        name: "Salmorejo",
-        lat: -0.5144675744871279,
-        long: 38.39151012307428,
-        lastFed: "2024-08-01",
-        description: "Alérgico, tóxico, cínico"
-    }
-]
-
-app.get('/cats', (req, res) => {
-    res.json(cats);
-});
-
-app.get('/cats/:id', (req, res) => {
-    const catId = parseInt(req.params.id);
-    const cat = cats.find(c => c.id === catId);
-
-    if (cat) {
-        res.json(cat);
-    } else {
-        res.status(404).json({ message: "Cat not found"});
-    }
-});
-
-app.post('/cats', (req, res) => {
-    const newCat = req.body;
-    newCat.id = cats.length + 1;
-    cats.push(newCat);
-    res.status(201).json(newCat);
-});
-
-app.put('/cats/:id', (req, res) => {
-    const catId = parseInt(req.params.id);
-    const catIndex = cats.findIndex(c => c.id === catId);
-
-    if(catIndex !== -1) {
-        const updatedCat = { ...cats[catIndex], ...req.body };
-        cats[catIndex] = updatedCat;
-        res.json(updatedCat);
-    } else {
-        res.status(404).json({ message: "Cat not found"});
-    }
-});
-
-app.delete('/cats/:id', (req, res) => {
-    const catId = parseInt(req.params.id);
-    const catIndex = cats.findIndex(c => c.id === catId);
-
-    if (catIndex !== -1) {
-        const deletedCat = cats.splice(catIndex, 1);
-        res.json(deletedCat[0]);
-    } else {
-        res.status(404).json({ message: "Cat not found"});
-    }
-});
-

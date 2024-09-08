@@ -10,7 +10,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "lokijs": "^1.5.12"
   },
   "engines": {
     "node": "22.x"
