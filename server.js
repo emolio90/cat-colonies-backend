@@ -37,3 +37,10 @@ let cats = [
 app.get('/cats', (req, res) => {
     res.json(cats);
 });
+
+app.post('/cats', (req, res) => {
+    const newCat = req.body;
+    newCat.id = cats.length + 1;
+    cats.push(newCat);
+    res.status(201).json(newCat);
+})
