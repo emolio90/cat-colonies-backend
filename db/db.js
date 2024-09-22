@@ -1,7 +1,9 @@
 const loki = require('lokijs');
+require('dotenv').config();
 
+const dbPath = process.env.DB_PATH || 'cats.db'
 // Initialize LokiJS database
-const db = new loki('cats.db', {
+const db = new loki(dbPath, {
     autoload: true,
     autoloadCallback: loadHandler,
     autosave: true,
