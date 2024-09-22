@@ -1,5 +1,6 @@
 const express = require('express');
 const loki = require('lokijs');
+const path = require('path'); // Import path to resolve file paths
 
 // Initialize the Express app
 const app = express();
@@ -7,6 +8,9 @@ const port = 3000;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+
+// Serve static files from the "public" folder (for front-end)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Initialize LokiJS database and load the data from 'cats.db'
 const db = new loki('cats.db', {

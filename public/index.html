@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Colony Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Cat Colony Management</h1>
+
+    <!-- Form to Add a New Cat -->
+    <div>
+        <h2>Add a Cat</h2>
+        <form id="addCatForm">
+            <label>Name: <input type="text" id="name" required></label><br>
+            <label>Latitude: <input type="number" id="lat" required></label><br>
+            <label>Longitude: <input type="number" id="long" required></label><br>
+            <label>Last Fed: <input type="text" id="lastFed" required></label><br>
+            <label>Description: <input type="text" id="description"></label><br>
+            <button type="submit">Add Cat</button>
+        </form>
+    </div>
+
+    <!-- Display All Cats -->
+    <h2>All Cats</h2>
+    <div id="catList"></div>
+
+    <!-- Form to Update a Cat -->
+    <div id="updateCatSection" class="hidden">
+        <h2>Update Cat</h2>
+        <form id="updateCatForm">
+            <label>Name: <input type="text" id="updateName"></label><br>
+            <label>Latitude: <input type="number" id="updateLat"></label><br>
+            <label>Longitude: <input type="number" id="updateLong"></label><br>
+            <label>Last Fed: <input type="text" id="updateLastFed"></label><br>
+            <label>Description: <input type="text" id="updateDescription"></label><br>
+            <button type="submit">Update Cat</button>
+        </form>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
